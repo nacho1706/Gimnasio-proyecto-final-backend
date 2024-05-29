@@ -3,6 +3,7 @@ const {
   getAllUsers,
   updateUser,
   registerUser,
+  loginUser,
 } = require("../controllers/userControllers");
 
 const registerValidation = require("../middlewares/register/registerValidation");
@@ -21,5 +22,11 @@ app.post(
   handleValidationErrors,
   registerUser
 );
+
+app.post(
+  "/login",
+  handleValidationErrors,
+  loginUser
+)
 
 module.exports = app;
