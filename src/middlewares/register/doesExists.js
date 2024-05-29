@@ -1,7 +1,8 @@
-const UserModel = require("../models/userSchema");
+const UserModel = require("../../models/userSchema");
 
-const userExists = async (username, res) => {
+const userExists = async (req, res, next) => {
   try {
+    const { username } = req.body;
     const userExist = await UserModel.findOne({ username });
 
     if (userExist) {
@@ -12,10 +13,12 @@ const userExists = async (username, res) => {
   } catch (error) {
     return res.status(500).json({ msg: "Internal server error", error });
   }
+  next();
 };
 
-const emailExists = async (email, res) => {
+const emailExists = async (req, res, next) => {
   try {
+    const { email } = req.body;
     const emailExist = await UserModel.findOne({ email });
 
     if (emailExist) {
@@ -26,6 +29,7 @@ const emailExists = async (email, res) => {
   } catch (error) {
     return res.status(500).json({ msg: "Internal server error", error });
   }
+  next();
 };
 
 module.exports = {

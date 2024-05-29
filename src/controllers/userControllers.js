@@ -2,8 +2,7 @@ const UserModel = require("../models/userSchema");
 
 const bcrypt = require("bcrypt");
 const JWT = require("jsonwebtoken");
-const { validationResult } = require("express-validator");
-const { userExists, emailExists } = require("../utils/doesExists");
+// const { userExists, emailExists } = require("../utils/doesExists");
 
 const getAllUsers = async (req, res) => {
   try {
@@ -31,9 +30,9 @@ const updateUser = async (req, res) => {
 const registerUser = async (req, res) => {
   try {
 
-    const { username , email } = req.body;
-    userExists(username);
-    emailExists(email);
+    // const { username , email } = req.body;
+    // userExists(username);
+    // emailExists(email);
     
     const newUser = new UserModel(req.body);
 
