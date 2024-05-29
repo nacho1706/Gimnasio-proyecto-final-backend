@@ -1,6 +1,6 @@
 const { check } = require('express-validator');
 
-const registerValidation = [
+const registerValidationRules = [
   check("username").not().isEmpty().withMessage("Username is required"),
   check("password").not().isEmpty().withMessage("Password is required"),
   check("password")
@@ -10,4 +10,4 @@ const registerValidation = [
     .isEmail()
     .withMessage("Debe ser un correo electrónico válido")
 ];
-module.exports = registerValidation;
+module.exports = registerValidationRules;
