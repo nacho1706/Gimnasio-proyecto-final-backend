@@ -1,21 +1,29 @@
 const express = require("express");
 const {
   getAllUsers,
+  getOneUser,
   updateUser,
+  deleteUserById,
+  deleteUserByUsername,
   registerUser,
   loginUser,
 } = require("../controllers/userControllers");
 
-const registerValidation = require("../middlewares/register/regRulesValidator");
 const handleValidationErrors = require("../middlewares/handleValidationErrors");
 const { userExists, emailExists } = require("../middlewares/register/doesExists");
 const { loginValidator } = require("../middlewares/login/dataValidator");
-const registerValidationRules = require("../middlewares/register/regRulesValidator");
+const { registerValidationRules } = require("../middlewares/register/regRulesValidator");
 const { loginValidationRules } = require("../middlewares/login/logRulesValidator");
 
 const app = express.Router();
 
+//Get all users
 app.get("/getAll", getAllUsers);
+
+//Get one user
+app.get("getUser/:username", getOneUser)
+
+//Register
 app.post(
   "/register",
   userExists, // Middleware personalizado
@@ -25,6 +33,7 @@ app.post(
   registerUser
 );
 
+//Login
 app.post(
   "/login",
   ...loginValidationRules,
@@ -32,5 +41,8 @@ app.post(
   handleValidationErrors,
   loginUser
 )
+
+
+
 
 module.exports = app;

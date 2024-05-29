@@ -1,6 +1,4 @@
 const UserModel = require("../models/userSchema");
-
-const bcrypt = require("bcrypt");
 const JWT = require("jsonwebtoken");
 // const { userExists, emailExists } = require("../utils/doesExists");
 
@@ -12,6 +10,17 @@ const getAllUsers = async (req, res) => {
     console.log(error);
   }
 };
+const getOneUser = async (req, res) => {
+  try {
+    const user = await UserModel.findOne({ username: req.params.username });
+    if (!user) {
+      return res.status(404).send({ message: "User not found" });
+    }
+    res.send(user);
+  } catch (error) {
+    res.status(500).json({ msg: "Internal server error", error: error });
+  }
+};
 
 const updateUser = async (req, res) => {
   try {
@@ -21,7 +30,33 @@ const updateUser = async (req, res) => {
       { new: true }
     );
 
-    res.status(200).json({ msg: "Usuario Actualizado", update });
+    res.status(200).json({ msg: "User updated successfuly", update });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const deleteUserByUsername = async (req, res) => {
+  try {
+    const update = await UserModel.findOneAndDelete({ username: req.params.username });
+    if (!user) {
+      return res.status(404).send({ message: "Username not found" });
+    }
+
+    res.status(200).json({ msg: "Username deleted susccessfuly", update });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const deleteUserById = async (req, res) => {
+  try {
+    const update = await UserModel.findByIdAndDelete({ _id: req.params.idUser });
+    if (!user) {
+      return res.status(404).send({ message: "Username not found" });
+    }
+
+    res.status(200).json({ msg: "Username deleted susccessfuly", update });
   } catch (error) {
     console.log(error);
   }
@@ -57,25 +92,24 @@ const loginUser = async (req, res) => {
   try {
     const { username } = req.body;
 
-    const user = await UserModel.findOne({username})
+    const user = await UserModel.findOne({ username });
 
-      const payload = {
-        user: {
-          idUser: user._id,
-          role: user.role,
-          username: user.username,
-          email: user.email,
-          first_name: user.first_name,
-          last_name: user.last_name,
-          phone_number: user.phone_number,
-          pfp: user.pfp,
-        },
-      };
+    const payload = {
+      user: {
+        idUser: user._id,
+        role: user.role,
+        username: user.username,
+        email: user.email,
+        first_name: user.first_name,
+        last_name: user.last_name,
+        phone_number: user.phone_number,
+        pfp: user.pfp,
+      },
+    };
 
-      const token = JWT.sign(payload, process.env.JWT_SECRETPASS);
-      console.log(token);
-      res.status(200).json({ msg: "Usuario Logueado", token });
-      
+    const token = JWT.sign(payload, process.env.JWT_SECRETPASS);
+    console.log(token);
+    res.status(200).json({ msg: "Usuario Logueado", token });
   } catch (error) {
     console.log(error);
     res.status(500).json({ msg: "Error: Server", error });
