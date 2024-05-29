@@ -3,6 +3,7 @@ const UserModel = require("../models/userSchema");
 const bcrypt = require("bcrypt");
 const JWT = require("jsonwebtoken");
 const { validationResult } = require("express-validator");
+const { userExists, emailExists } = require("../utils/doesExists");
 
 const getAllUsers = async (req, res) => {
   try {
@@ -29,26 +30,16 @@ const updateUser = async (req, res) => {
 
 const registerUser = async (req, res) => {
   try {
-    const errors = validationResult(req);
 
-    if (!errors.isEmpty()) {
-      return res.status(422).json(errors.array());
-    }
+    const { username , email } = req.body;
+    userExists(username);
+    emailExists(email);
     
-    const {
-      username,
-      password,
-      email,
-      first_name,
-      last_name,
-      phone_number,
-      pfp,
-    } = req.body;
-
     const newUser = new UserModel(req.body);
 
     let salt = bcrypt.genSaltSync(10);
     newUser.password = bcrypt.hashSync(req.body.password, salt);
+
 
     //const sendMail = await userRegister(emailUsuario);
 

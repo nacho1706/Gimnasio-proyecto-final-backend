@@ -17,9 +17,9 @@ const UserSchema = new Schema({
     type: String,
     trim: true,
     lowercase: true,
-    unique: true,
     required: true,
-    match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Please fill a valid email address']
+    match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Please fill a valid email address'],
+    unique: true
   },
   
   first_name: String,
@@ -29,6 +29,7 @@ const UserSchema = new Schema({
   phone_number: {
     type: String,
     sparse: true, // Permite valores null y evita problemas de duplicidad
+    default: null,
   },
   
   role: {
