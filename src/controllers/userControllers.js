@@ -1,18 +1,21 @@
 const UserModel = require("../models/userSchema");
 const JWT = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
+
 // const { userExists, emailExists } = require("../utils/doesExists");
 
 const getAllUsers = async (req, res) => {
   try {
-    const getUsers = await UserModel.find();
+    const getUsers = await UserModel.find().select("-password");
     res.status(200).json({ msg: "All users:  ", getUsers });
   } catch (error) {
     console.log(error);
   }
 };
 const getOneUser = async (req, res) => {
+  const { username } = req.params;
   try {
-    const user = await UserModel.findOne({ username: req.params.username });
+    const user = await UserModel.findOne({ username }).select("-password");
     if (!user) {
       return res.status(404).send({ message: "User not found" });
     }
@@ -25,7 +28,7 @@ const getOneUser = async (req, res) => {
 const updateUser = async (req, res) => {
   try {
     const update = await UserModel.findByIdAndUpdate(
-      { _id: req.params.idUser },
+      req.params.idUser,
       req.body,
       { new: true }
     );
@@ -36,27 +39,38 @@ const updateUser = async (req, res) => {
   }
 };
 
-const deleteUserByUsername = async (req, res) => {
-  try {
-    const update = await UserModel.findOneAndDelete({ username: req.params.username });
-    if (!user) {
-      return res.status(404).send({ message: "Username not found" });
-    }
+// const deleteUserByUsername = async (req, res) => {
+//   try {
+//     const update = await UserModel.findOneAndDelete({
+//       username: req.params.username,
+//     });
+//     if (!user) {
+//       return res.status(404).send({ message: "Username not found" });
+//     }
 
-    res.status(200).json({ msg: "Username deleted susccessfuly", update });
-  } catch (error) {
-    console.log(error);
-  }
-};
+//     res.status(200).json({ msg: "Username deleted susccessfuly", update });
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
 
 const deleteUserById = async (req, res) => {
   try {
-    const update = await UserModel.findByIdAndDelete({ _id: req.params.idUser });
+    const user = await UserModel.findByIdAndDelete(req.params.id);
+
+    console.log(user);
     if (!user) {
-      return res.status(404).send({ message: "Username not found" });
+      return res.status(404).send({ message: "User not found" });
     }
 
-    res.status(200).json({ msg: "Username deleted susccessfuly", update });
+    const userResponse = {
+      _id: user._id,
+      username: user.username,
+    };
+
+    res
+      .status(200)
+      .json({ msg: "User deleted susccessfuly", user: userResponse });
   } catch (error) {
     console.log(error);
   }
@@ -118,7 +132,10 @@ const loginUser = async (req, res) => {
 
 module.exports = {
   getAllUsers,
+  getOneUser,
   updateUser,
+  deleteUserById,
+  // deleteUserByUsername,
   registerUser,
   loginUser,
 };

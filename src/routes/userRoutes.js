@@ -4,24 +4,35 @@ const {
   getOneUser,
   updateUser,
   deleteUserById,
-  deleteUserByUsername,
+  // deleteUserByUsername,
   registerUser,
   loginUser,
 } = require("../controllers/userControllers");
 
 const handleValidationErrors = require("../middlewares/handleValidationErrors");
-const { userExists, emailExists } = require("../middlewares/register/doesExists");
+const {
+  userExists,
+  emailExists,
+} = require("../middlewares/register/doesExists");
 const { loginValidator } = require("../middlewares/login/dataValidator");
-const { registerValidationRules } = require("../middlewares/register/regRulesValidator");
-const { loginValidationRules } = require("../middlewares/login/logRulesValidator");
+const { checkUserId } = require("../middlewares/id/checkUserId");
+const {
+  registerValidationRules,
+  loginValidationRules,
+  idValidationRules,
+} = require("../middlewares/inputRules");
 
 const app = express.Router();
 
 //Get all users
 app.get("/getAll", getAllUsers);
-
 //Get one user
-app.get("getUser/:username", getOneUser)
+app.get("/getUser/:username", getOneUser);
+//Delete one User by id
+app.delete("/deleteUser/:id", deleteUserById);
+
+//Update one user by ID
+app.put("/updateUser/:id", ...idValidationRules, checkUserId, handleValidationErrors, updateUser);
 
 //Register
 app.post(
@@ -40,9 +51,6 @@ app.post(
   loginValidator,
   handleValidationErrors,
   loginUser
-)
-
-
-
+);
 
 module.exports = app;
