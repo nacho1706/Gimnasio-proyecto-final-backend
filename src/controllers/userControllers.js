@@ -28,40 +28,33 @@ const getOneUser = async (req, res) => {
 const updateUser = async (req, res) => {
   try {
     const update = await UserModel.findByIdAndUpdate(
-      req.params.idUser,
+      req.params.id,
       req.body,
-      { new: true }
+      { new: true, runValidators: true }
     );
 
+    console.log(update);
     res.status(200).json({ msg: "User updated successfuly", update });
   } catch (error) {
-    console.log(error);
+    res.status(500).json({ msg: "Error: Server", error });
   }
 };
 
-// const deleteUserByUsername = async (req, res) => {
-//   try {
-//     const update = await UserModel.findOneAndDelete({
-//       username: req.params.username,
-//     });
-//     if (!user) {
-//       return res.status(404).send({ message: "Username not found" });
-//     }
+const deleteUserByUsername = async (req, res) => {
+  try {
+    const update = await UserModel.findOneAndDelete({
+      username: req.params.username,
+    });
 
-//     res.status(200).json({ msg: "Username deleted susccessfuly", update });
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
+    res.status(200).json({ msg: "Username deleted susccessfuly", update });
+  } catch (error) {
+    res.status(500).json({ msg: "Error: Server", error });
+  }
+};
 
 const deleteUserById = async (req, res) => {
   try {
     const user = await UserModel.findByIdAndDelete(req.params.id);
-
-    console.log(user);
-    if (!user) {
-      return res.status(404).send({ message: "User not found" });
-    }
 
     const userResponse = {
       _id: user._id,
@@ -72,7 +65,7 @@ const deleteUserById = async (req, res) => {
       .status(200)
       .json({ msg: "User deleted susccessfuly", user: userResponse });
   } catch (error) {
-    console.log(error);
+    res.status(500).json({ msg: "Error: Server", error });
   }
 };
 
@@ -135,7 +128,7 @@ module.exports = {
   getOneUser,
   updateUser,
   deleteUserById,
-  // deleteUserByUsername,
+  deleteUserByUsername,
   registerUser,
   loginUser,
 };

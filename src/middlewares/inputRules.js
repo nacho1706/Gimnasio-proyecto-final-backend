@@ -18,8 +18,14 @@ const idValidationRules = [
   check("id").isMongoId().withMessage("Invalid MongoDB ID"),
 ];
 
+const userIsEmpty = [
+  check("username").not().isEmpty().withMessage("Username is required"),
+];
+
+
 module.exports = {
   registerValidationRules,
   loginValidationRules,
   idValidationRules,
+  userIsEmpty
 };

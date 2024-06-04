@@ -4,7 +4,7 @@ const {
   getOneUser,
   updateUser,
   deleteUserById,
-  // deleteUserByUsername,
+  deleteUserByUsername,
   registerUser,
   loginUser,
 } = require("../controllers/userControllers");
@@ -20,7 +20,11 @@ const {
   registerValidationRules,
   loginValidationRules,
   idValidationRules,
+  userIsEmpty,
 } = require("../middlewares/inputRules");
+const { checkEmptyBody } = require("../middlewares/updateUser/checkEmptyBody");
+const { blockPasswordUpdate } = require("../middlewares/updateUser/blockPasswordUpdate");
+
 
 const app = express.Router();
 
@@ -29,10 +33,12 @@ app.get("/getAll", getAllUsers);
 //Get one user
 app.get("/getUser/:username", getOneUser);
 //Delete one User by id
-app.delete("/deleteUser/:id", deleteUserById);
+app.delete("/deleteUser/:id", ...idValidationRules, deleteUserById);
+//Delete one User by username
+app.delete("/deleteUserbyUsername/:username", ...userIsEmpty, userExists, deleteUserByUsername);
 
 //Update one user by ID
-app.put("/updateUser/:id", ...idValidationRules, checkUserId, handleValidationErrors, updateUser);
+app.put("/updateUser/:id", ...idValidationRules, checkUserId, checkEmptyBody, blockPasswordUpdate, handleValidationErrors, updateUser);
 
 //Register
 app.post(

@@ -10,6 +10,7 @@ class Server {
   }
 
   routes() {
+    // this.app.use(isJsonMiddleware); PREGUNTAR
     this.app.use("/api/users", require("../routes/userRoutes"));
   }
 
