@@ -5,7 +5,7 @@ const emailRegisterSuccess = async (req, res, next) => {
     const { email } = req.body;
     // send mail with defined transport object
     const info = await transporter.sendMail({
-      from: '"Register success 👻" <ignacio.albarracn@gmail.com>', // sender address
+      from: `"Register success 👻" <${process.env.NODEMAILER_USER}>`, // sender address
       to: `${email}`, // list of receivers
       subject: "Hello ✔", // Subject line
       text: "Gracias por registrarte en nuestro sitio. Estamos emocionados de tenerte a bordo.", // plain text body

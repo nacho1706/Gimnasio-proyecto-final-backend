@@ -35,9 +35,9 @@ app.get("/getAll", auth(["admin", "professor"]), getAllUsers);
 //Get one user
 app.get("/getUser/:username", getOneUser);
 //Delete one User by id
-app.delete("/deleteUser/:id", auth("admin"), ...idValidationRules, deleteUserById);
+app.delete("/deleteUser/:id", auth("admin"), ...idValidationRules, checkUserId, deleteUserById);
 //Delete one User by username
-app.delete("/deleteUserbyUsername/:username", deleteUserByUsername); //BORRAR DESPUES PQ NO TIENE SENTIDO
+app.delete("/deleteUserbyUsername/:username", auth("admin"), deleteUserByUsername); //BORRAR DESPUES PQ NO TIENE SENTIDO
 
 //Update one user by ID
 app.put("/updateUser/:id", ...idValidationRules, checkUserId, auth(["admin, professor, student"]), checkEmptyBody, blockPasswordUpdate, handleValidationErrors, updateUser);
