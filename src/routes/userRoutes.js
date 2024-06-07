@@ -13,32 +13,34 @@ const handleValidationErrors = require("../middlewares/handleValidationErrors");
 const {
   userExists,
   emailExists,
-} = require("../middlewares/register/doesExists");
-const { loginValidator } = require("../middlewares/login/dataValidator");
-const { checkUserId } = require("../middlewares/id/checkUserId");
+} = require("../middlewares/user/register/doesExists");
+const { loginValidator } = require("../middlewares/user/login/dataValidator");
+const { checkUserId } = require("../middlewares/user/id/checkUserId");
 const {
   registerValidationRules,
   loginValidationRules,
   idValidationRules,
-  userIsEmpty,
-} = require("../middlewares/inputRules");
-const { checkEmptyBody } = require("../middlewares/updateUser/checkEmptyBody");
-const { blockPasswordUpdate } = require("../middlewares/updateUser/blockPasswordUpdate");
+} = require("../middlewares/user/inputRules");
+const { checkEmptyBody } = require("../middlewares/user/updateUser/checkEmptyBody");
+const { blockPasswordUpdate } = require("../middlewares/user/updateUser/blockPasswordUpdate");
+const auth = require("../middlewares/auth");
+const emailRegisterSuccess = require("../middlewares/user/register/emailRegisterSuccess");
+const excludeRoles = require("../middlewares/user/register/excludeRoles");
 
 
 const app = express.Router();
 
 //Get all users
-app.get("/getAll", getAllUsers);
+app.get("/getAll", auth(["admin", "professor"]), getAllUsers);
 //Get one user
 app.get("/getUser/:username", getOneUser);
 //Delete one User by id
-app.delete("/deleteUser/:id", ...idValidationRules, deleteUserById);
+app.delete("/deleteUser/:id", auth("admin"), ...idValidationRules, deleteUserById);
 //Delete one User by username
-app.delete("/deleteUserbyUsername/:username", ...userIsEmpty, userExists, deleteUserByUsername);
+app.delete("/deleteUserbyUsername/:username", deleteUserByUsername); //BORRAR DESPUES PQ NO TIENE SENTIDO
 
 //Update one user by ID
-app.put("/updateUser/:id", ...idValidationRules, checkUserId, checkEmptyBody, blockPasswordUpdate, handleValidationErrors, updateUser);
+app.put("/updateUser/:id", ...idValidationRules, checkUserId, auth(["admin, professor, student"]), checkEmptyBody, blockPasswordUpdate, handleValidationErrors, updateUser);
 
 //Register
 app.post(
@@ -46,6 +48,8 @@ app.post(
   userExists, // Middleware personalizado
   emailExists,
   ...registerValidationRules, // Descomponiendo el arreglo en funciones individuales
+  excludeRoles,
+  emailRegisterSuccess,
   handleValidationErrors,
   registerUser
 );

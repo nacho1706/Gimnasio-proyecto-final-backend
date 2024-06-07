@@ -1,4 +1,4 @@
-const { check } = require("express-validator");
+const { check, header } = require("express-validator");
 
 const registerValidationRules = [
   check("username").not().isEmpty().withMessage("Username is required"),
@@ -15,7 +15,7 @@ const loginValidationRules = [
 ];
 
 const idValidationRules = [
-  check("id").isMongoId().withMessage("Invalid MongoDB ID"),
+  header("id").isMongoId().withMessage("Invalid MongoDB ID"),
 ];
 
 const userIsEmpty = [

@@ -34,7 +34,7 @@ const UserSchema = new Schema({
   
   role: {
     type: String,
-    default: "student",
+    default: "student", // Roles [student, professor, admin]
   },
 
   enabled: {

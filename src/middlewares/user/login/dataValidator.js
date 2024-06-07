@@ -1,4 +1,4 @@
-const UserModel = require("../../models/userSchema");
+const UserModel = require("../../../models/userSchema");
 const bcrypt = require("bcrypt");
 
 const loginValidator = async (req, res, next) => {
