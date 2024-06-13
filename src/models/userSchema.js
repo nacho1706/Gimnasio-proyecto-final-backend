@@ -34,7 +34,8 @@ const UserSchema = new Schema({
   
   role: {
     type: String,
-    default: "student", // Roles [student, professor, admin]
+    enum: ["student", "professor", "admin"],
+    default: "student",
   },
 
   enabled: {
@@ -47,6 +48,6 @@ const UserSchema = new Schema({
   },
 });
 
-const UserModel = model("user", UserSchema);
+const UserModel = model("User", UserSchema);
 
 module.exports = UserModel;

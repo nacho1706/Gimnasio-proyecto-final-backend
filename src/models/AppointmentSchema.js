@@ -1,27 +1,19 @@
+
 const { Schema, model } = require("mongoose");
 
 const AppointmentSchema = new Schema({
   user: {
     type: Schema.Types.ObjectId,
-    ref: "user",
+    ref: "User",
     required: true,
   },
-  trainer: {
+  shift: {
     type: Schema.Types.ObjectId,
-    ref: "user",
+    ref: "Shift",
     required: true,
-  },
-  date: {
-    type: Date,
-    required: true,
-  },
-  branch: {
-    type: String,
-    branches: ["Yerba buena"],
-    default: branches[0],
-  },
+  }
 });
 
 const AppointmentModel = model("Appointment", AppointmentSchema);
 
-module.exports = PersonModel;
+module.exports = AppointmentModel;
