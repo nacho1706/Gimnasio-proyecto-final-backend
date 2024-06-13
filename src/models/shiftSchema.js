@@ -2,9 +2,9 @@ const { Schema, model } = require("mongoose");
 
 const ShiftSchema = new Schema({
     //nombre de la clase POR EJEMPLO: CROSSFIT
-  className: {
+  activity: {
     type: Schema.Types.ObjectId,
-    ref: "ClassName",
+    ref: "Activity",
     required: true,
   },
   startTime: {
