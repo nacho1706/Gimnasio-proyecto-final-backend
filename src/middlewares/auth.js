@@ -3,7 +3,6 @@ const jwt = require("jsonwebtoken");
 const auth = (roles) => (req, res, next) => {
   try {
     const token = req.header("auth")?.replace("Bearer ", "");
-    console.log(token);
     if (token) {
       const verifyToken = jwt.verify(token, process.env.JWT_SECRETPASS);
       if (roles.includes(verifyToken.user.role)) {

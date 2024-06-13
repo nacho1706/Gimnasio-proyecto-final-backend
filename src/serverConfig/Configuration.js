@@ -15,6 +15,7 @@ class Server {
     this.app.use("/api", require("../routes/appointmentRoutes.js"));
     this.app.use("/api", require("../routes/branchRoutes.js"));
     this.app.use("/api", require("../routes/activityRoutes.js"));
+    this.app.use("/api", require("../routes/shiftRoutes.js"));
   }
 
   middlewares() {

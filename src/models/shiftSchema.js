@@ -30,7 +30,9 @@ const ShiftSchema = new Schema({
   },
   date: {
     type: Date,
+    default: Date.now,
     required: true,
+    expires: '7d'  // Esto hará que el documento se elimine automáticamente después de 7 días
   },
   weekly: {
     type: Boolean,
@@ -42,6 +44,10 @@ const ShiftSchema = new Schema({
     required: true,
   },
 });
+
+// Solo se eliminarán automáticamente los documentos si `weekly` es `false`
+ShiftSchema.index({ date: 1 }, { expireAfterSeconds: 7 * 24 * 60 * 60, partialFilterExpression: { weekly: false } });
+
 
 const ShiftModel = model("Shift", ShiftSchema);
 

@@ -6,13 +6,15 @@ const {
   updateActivity,
   deleteActivity,
 } = require("../controllers/activityControllers");
+const handleValidationErrors = require("../middlewares/handleValidationErrors");
+const auth = require("../middlewares/auth");
 
 const app = express.Router();
 
-app.post("/createActivity", createActivity);
-app.get("/getAllActivities", getAllActivities);
-app.post("/getActivity", getActivityById);
-app.put("/updateActivity", updateActivity);
-app.delete("/deleteActivity", deleteActivity);
+app.post("/createActivity", auth("admin"), handleValidationErrors, createActivity);
+app.get("/getAllActivities", auth("admin"), handleValidationErrors, getAllActivities);
+app.post("/getActivity", auth("admin"), handleValidationErrors, getActivityById);
+app.put("/updateActivity", auth("admin"), handleValidationErrors, updateActivity);
+app.delete("/deleteActivity", auth("admin"), handleValidationErrors, deleteActivity);
 
 module.exports = app;
