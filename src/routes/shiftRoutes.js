@@ -12,7 +12,7 @@ const handleValidationErrors = require("../middlewares/handleValidationErrors");
 
 app.post("/createShift" ,auth("admin"), handleValidationErrors, createShift);
 app.get("/getAllShifts", auth("admin"), handleValidationErrors, getAllShifts);
-app.post("/shift/:id", auth("admin"), handleValidationErrors, getShiftById);
+app.post("/getShift", auth("admin"), handleValidationErrors, getShiftById);
 app.put("/updateShift", auth("admin"), handleValidationErrors, updateShift);
 app.delete("/deleteShift", auth("admin"), handleValidationErrors, deleteShift);
 

@@ -28,14 +28,20 @@ const UserSchema = new Schema({
 
   phone_number: {
     type: String,
-    sparse: true, // Permite valores null y evita problemas de duplicidad
-    default: null,
+    match: [/^\d+$/],
+    required: true,
   },
   
   role: {
     type: String,
     enum: ["student", "professor", "admin"],
     default: "student",
+  },
+
+  plan: {
+    type: Schema.Types.ObjectId,
+    ref: "Plan",
+    required: true,
   },
 
   enabled: {
