@@ -34,7 +34,7 @@ const excludeRoles = require("../middlewares/user/register/excludeRoles");
 const app = express.Router();
 
 //Get all users
-app.get("/getAll", auth(["admin", "professor"]), getAllUsers);
+app.get("/getAll", auth(["admin", "professor"]), getAllUsers); 
 //Get one user
 app.get("/getUser/:username", getOneUser);
 //Delete one User by id
@@ -55,9 +55,7 @@ app.delete(
 //Update one user by ID
 app.put(
   "/updateUser/:id",
-  ...idValidationRules,
-  checkUserId,
-  auth(["admin, professor, student"]),
+  auth(["admin"]),
   checkEmptyBody,
   blockPasswordUpdate,
   handleValidationErrors,

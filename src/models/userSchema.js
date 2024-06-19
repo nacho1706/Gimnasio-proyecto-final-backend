@@ -1,4 +1,5 @@
-const { Schema, model } = require("mongoose");
+const { Schema, model, mongoose } = require("mongoose");
+
 
 const UserSchema = new Schema({
   username: {
@@ -41,7 +42,6 @@ const UserSchema = new Schema({
   plan: {
     type: Schema.Types.ObjectId,
     ref: "Plan",
-    required: true,
   },
 
   enabled: {

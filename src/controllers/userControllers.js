@@ -7,16 +7,30 @@ const recoveryPassMsg = require("../middlewares/user/updateUser/recoveryPass");
 
 const getAllUsers = async (req, res) => {
   try {
-    const getUsers = await UserModel.find().select("-password");
-    res.status(200).json({ msg: "All users:  ", getUsers });
+    console.log(req.query);
+    const numeroPagina = req.query.numeroPagina || 0;
+    const limite = req.query.limite || 8;
+
+    const [getUsers, count] = await Promise.all([
+      UserModel.find()
+        .select("-password")
+        .populate("plan", "name")
+        .skip(numeroPagina * limite)
+        .limit(limite),
+      UserModel.countDocuments(),
+    ]);
+    res.status(200).json({ msg: "All users:  ", getUsers, count, limite});
   } catch (error) {
     console.log(error);
   }
 };
+
 const getOneUser = async (req, res) => {
   const { username } = req.params;
   try {
-    const user = await UserModel.findOne({ username }).select("-password -_id");
+    const user = await UserModel.findOne({ username })
+      .select("-password -_id")
+      .populate("plan", "name");
     if (!user) {
       return res.status(404).send({ message: "User not found" });
     }
@@ -33,10 +47,16 @@ const updateUser = async (req, res) => {
       runValidators: true,
     });
 
+    // Verifica si se encontró y actualizó correctamente el usuario
+    if (!update) {
+      return res.status(404).json({ msg: "User not found" });
+    }
+
     console.log(update);
-    res.status(200).json({ msg: "User updated successfuly", update });
+    res.status(200).json({ msg: "User updated successfully", update });
   } catch (error) {
-    res.status(500).json({ msg: "Error: Server", error });
+    console.log(error);
+    res.status(500).json({ msg: "Error: Server" });
   }
 };
 
@@ -82,7 +102,7 @@ const registerUser = async (req, res) => {
 
     let salt = bcrypt.genSaltSync(10);
     newUser.password = bcrypt.hashSync(req.body.password, salt);
-    
+
     await newUser.save();
 
     res.status(201).json({ msg: "Usuario creado con exito", newUser });
@@ -113,7 +133,10 @@ const loginUser = async (req, res) => {
 
     const token = JWT.sign(payload, process.env.JWT_SECRETPASS);
     console.log(token);
-    res.status(200).json({ msg: "Usuario Logueado", token });
+
+    const role = user.role;
+
+    res.status(200).json({ msg: "Usuario Logueado", token, role});
   } catch (error) {
     res.status(500).json({ msg: "Error: Server", error });
   }
@@ -173,5 +196,5 @@ module.exports = {
   registerUser,
   loginUser,
   recoveryPass,
-  changePass
+  changePass,
 };
